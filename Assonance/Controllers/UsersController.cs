@@ -81,6 +81,7 @@ namespace Assonance.Controllers
             if (user_!=null) {
                 return BadRequest();
             }
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
             _context.User_.Add(user);
             await _context.SaveChangesAsync();
 
@@ -115,7 +116,7 @@ namespace Assonance.Controllers
             {
                 return NotFound();
             }
-             else if (loginForm.Password.Equals(_user.Password))
+             else if (BCrypt.Net.BCrypt.Verify(loginForm.Password,_user.Password))
             {
                 return _user;
             }
